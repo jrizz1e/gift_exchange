@@ -8,7 +8,6 @@ Created on Mon Dec 16 17:22:48 2019
 #gift exchange
 
 #enter everyone in gift exchange
-names=[]
 def enter_names():
     name = input('Please enter a name. Enter "done" if finished adding names: ')
     if name.upper() != 'DONE':
