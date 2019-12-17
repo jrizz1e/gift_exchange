@@ -6,45 +6,44 @@ Created on Mon Dec 16 17:22:48 2019
 """
 
 #gift exchange
+import smtplib
 
 #enter everyone in gift exchange
 def enter_names():
     name = input('Please enter a name. Enter "done" if finished adding names: ')
+    email = input('Please enter the corresponding email address. Enter "done" if finished adding emails: ')
     if name.upper() != 'DONE':
         names.append(name.upper())
+        emails.append(email)
         enter_names()
     else:
         return True
 
 
 #set up giver:receiver pairs
-import random
-def draw_name():
-    i=1
-    while len(d.keys()) != len(names):
-        giver = input('Please enter your name: ')
-        giver=giver.upper()
-        if giver not in names:
-            return('Please enter a name in the gift exchange! ')
-        else:
-            options = [x for x in names if x != giver and x not in list(d.values())]
-            receiver = random.choice(options)
-            d[giver] = receiver
-            print(giver + ' is getting a gift for '+ d[giver])
-            if i>1:
-                names.remove(giver)
-                i+=1
-            draw_name()
+def draw_names():
+    for i in range(0, len(names)):
+        giver = names[i]
+        d[giver] = names[(i+1)%(len(names))]
+        msg = '\n You are getting a gift for '+ d[giver]
+        giver_email = emails[names.index(giver)]
+        smtpObj.sendmail(organizer_email, giver_email, msg)
     return d
 
-#init variables and run gift_exchange functionS
-names=[]
-d=dict()
+#init variables and run gift_exchange function
 def gift_exchange():
     a=enter_names()
-    b=draw_name()
-    print(d)
+    b=draw_names()
+    smtpObj.quit()
     return('Happy Holidays!')
     
+
+names=[]
+emails=[]
+d=dict()
+organizer_email = 'holidaygiftexchange2019@gmail.com'
+smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
+smtpObj.ehlo()
+smtpObj.starttls()
+smtpObj.login(organizer_email, '2019giftexchange')
 gift_exchange()
-    
